@@ -67,9 +67,11 @@ Widget _app(Widget home, double textScale) {
     theme: buildTheme(),
     navigatorKey: navKey,
     home: home,
-    builder: (context, child) => MediaQuery(
-      data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScale)),
-      child: child!,
+    builder: (context, child) => GlassBackground(
+      child: MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScale)),
+        child: child!,
+      ),
     ),
   );
 }

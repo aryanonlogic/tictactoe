@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'glass.dart';
+
+export 'glass.dart';
+
 const Color kInk = Color(0xFF0A0A0A);
 const Color kMist = Color(0xFFF1F1EF);
 const Color kLine = Color(0xFFE3E3E0);
@@ -7,7 +11,7 @@ const Color kSub = Color(0xFF8A8A86);
 
 ThemeData buildTheme() {
   return ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: Colors.transparent,
     colorScheme: const ColorScheme.light(
       primary: kInk,
       onPrimary: Colors.white,
@@ -24,8 +28,6 @@ ThemeData buildTheme() {
     }),
     textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: kInk)),
     bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.transparent,
       showDragHandle: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
     ),
@@ -34,6 +36,12 @@ ThemeData buildTheme() {
       contentTextStyle: const TextStyle(color: Colors.white),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: const Color(0xE6FFFFFF),
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
     ),
     dividerTheme: const DividerThemeData(color: kLine, thickness: 1, space: 1),
   );
@@ -119,11 +127,9 @@ Future<bool> confirmDialog(
   String confirm = 'OK',
   String cancel = 'Cancel',
 }) async {
-  final r = await showDialog<bool>(
+  final r = await showGlassDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
       content: body == null ? null : Text(body, style: const TextStyle(color: kSub, height: 1.35)),
@@ -147,11 +153,9 @@ Future<String?> promptText(
   String confirm = 'Save',
 }) async {
   final controller = TextEditingController(text: initial);
-  final r = await showDialog<String>(
+  final r = await showGlassDialog<String>(
     context: context,
     builder: (ctx) => AlertDialog(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
       content: TextField(

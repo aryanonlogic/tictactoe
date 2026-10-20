@@ -16,7 +16,7 @@ class VaultItemCountLabel {
 // ---------------------------------------------------------------- add / import
 
 Future<void> addFlow(BuildContext context, {String? folderId}) async {
-  final choice = await showModalBottomSheet<String>(
+  final choice = await showGlassSheet<String>(
     context: context,
     builder: (ctx) => SafeArea(
       child: Padding(
@@ -99,11 +99,9 @@ Future<void> importFlow(
   if (!context.mounted) return;
 
   if (report.errors.isNotEmpty) {
-    await showDialog<void>(
+    await showGlassDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
         title: const Text('Some files failed', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
         content: SingleChildScrollView(child: Text(report.errors.join('\n'))),
         actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('OK'))],
@@ -202,7 +200,7 @@ class FolderChoice {
 }
 
 Future<FolderChoice?> pickFolder(BuildContext context) {
-  return showModalBottomSheet<FolderChoice>(
+  return showGlassSheet<FolderChoice>(
     context: context,
     isScrollControlled: true,
     builder: (ctx) {

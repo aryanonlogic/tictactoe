@@ -36,6 +36,7 @@ class TicTacToeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navKey,
       theme: buildTheme(),
+      builder: (context, child) => GlassBackground(child: child ?? const SizedBox.shrink()),
       home: const SplashScreen(),
     );
   }

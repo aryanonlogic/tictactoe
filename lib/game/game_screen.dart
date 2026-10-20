@@ -209,7 +209,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   // ---------------- sheets ----------------
   void _showStats() {
-    showModalBottomSheet<void>(
+    showGlassSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
         child: Padding(
@@ -257,7 +257,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       );
 
   void _showSettings() {
-    showModalBottomSheet<void>(
+    showGlassSheet<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheet) => SafeArea(
@@ -308,7 +308,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
           SafeArea(

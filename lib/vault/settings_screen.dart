@@ -34,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _autoLock() async {
-    final v = await showModalBottomSheet<int>(
+    final v = await showGlassSheet<int>(
       context: context,
       builder: (ctx) => SafeArea(
         child: Column(
@@ -121,11 +121,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _about() {
-    showDialog<void>(
+    showGlassDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
         title: const Text('Tic Tac Toe', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
         content: const Text(
@@ -140,7 +138,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
           SafeArea(

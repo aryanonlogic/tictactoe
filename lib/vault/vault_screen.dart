@@ -37,7 +37,6 @@ class _VaultScreenState extends State<VaultScreen> {
   Widget build(BuildContext context) {
     final vault = session.vault;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
           SafeArea(
@@ -382,11 +381,9 @@ class FoldersView extends StatelessWidget {
       if (ok) await session.vault.deleteFolder(f.id, deleteFiles: false);
       return;
     }
-    final choice = await showDialog<String>(
+    final choice = await showGlassDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
         title: Text('Delete “${f.name}”?', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
         content: Text('It contains $n ${n == 1 ? 'file' : 'files'}.', style: const TextStyle(color: kSub)),
@@ -491,7 +488,6 @@ class FolderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(child: LibraryView(folder: folder)),
     );
   }

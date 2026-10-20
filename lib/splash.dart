@@ -46,7 +46,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     final board = (w * 0.6).clamp(160.0, 260.0).toDouble();
     final letters = _title.split('');
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: AnimatedBuilder(
           animation: _c,

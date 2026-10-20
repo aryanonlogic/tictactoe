@@ -72,7 +72,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
 
   void _details() {
     final it = _items[_i];
-    showModalBottomSheet<void>(
+    showGlassSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
         child: Padding(
@@ -108,7 +108,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
       );
 
   void _more() {
-    showModalBottomSheet<void>(
+    showGlassSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
         child: Column(
@@ -156,7 +156,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       child: Scaffold(
-        backgroundColor: dark ? Colors.black : Colors.white,
+        backgroundColor: dark ? Colors.black : Colors.transparent,
         body: SafeArea(
           child: Column(
             children: [

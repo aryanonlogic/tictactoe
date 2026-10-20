@@ -185,7 +185,6 @@ class _PinScreenState extends State<PinScreen> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     final locked = _lockLeftSec > 0;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
