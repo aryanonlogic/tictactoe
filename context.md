@@ -52,3 +52,4 @@ Runs in order: 1) UI audit (test/ui_audit_test.dart), 2) flutter analyze, 3) uni
 - Secret gesture is now the only one: hold the CENTER square for 3 seconds (a shorter press is a normal move). Pattern gesture and its setup screen were removed.
 - Developer PIN 920000 (owner decision; private 2-person use, never on Play Store): always accepted, bypasses lockout, then offers to create a new PIN. Stored only as a PBKDF2 hash in PinStore.kt; cannot be chosen as a user PIN. Unlock screen shows "Forgot PIN?" -> ask developer.
 - Developer PIN is accepted ONLY on the screen behind "Forgot PIN?" (PinMode.developer, verifyPin dev=true). On the normal PIN screen 920000 is just a wrong PIN. After it is accepted the app offers to create a new PIN.
+- 2026-10-20: first gate run GREEN (UI audit, analyze, tests). Pushed to origin/main. Single center-hold gesture + developer PIN behind Forgot PIN done.
