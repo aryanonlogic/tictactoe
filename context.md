@@ -57,3 +57,4 @@ Runs in order: 1) UI audit (test/ui_audit_test.dart), 2) flutter analyze, 3) uni
 - GIFs animate in the viewer (raw bytes). Video player has +/-10 s buttons and the scrub bar. Launch: icon flash (launch_background) then 1.3 s splash then game.
 - Encryption: files, thumbs and index are AES-256 under a Keystore-wrapped key. PIN is a UI gate only (not key material). Open decision: bind the key to the PIN (stronger vs root/forensics) vs keep developer-PIN recovery.
 - Splash (lib/splash.dart): 2 s cinematic intro (grid opens from the centre, a game plays itself in 3D X/O, X wins the diagonal, shock ring, title spells out), then fades to the game. Launcher icon is generated from the owner's tictactoeicon.png (round, legacy and themed monochrome).
+- Settings > Restore All to Gallery: confirm + PIN, then restoreAll() in batches of 8 (native hash-verify per file, index saved per batch, progress in BusyOverlay). Files land in Pictures/Restored and Movies/Restored (flat).

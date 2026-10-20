@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../app_state.dart';
 import '../ui.dart';
+import 'busy_overlay.dart';
 import 'pin_screen.dart';
 import 'vault_flow.dart';
 
@@ -69,6 +70,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) setState(() {});
   }
 
+  Future<void> _restoreAll() async {
+    final nav = Navigator.of(context);
+    final n = session.vault.items.length;
+    if (n == 0) {
+      snack(context, 'The vault is empty');
+      return;
+    }
+    final ok = await confirmDialog(
+      context,
+      title: 'Restore all $n ${n == 1 ? 'file' : 'files'}?',
+      body: 'Everything is saved to your gallery (Pictures/Restored and Movies/Restored) and removed from the vault, '
+          'in small batches, only after each copy is verified. Keep the app open until it finishes.',
+      confirm: 'Restore all',
+    );
+    if (!ok || !mounted) return;
+    final pinOk = await nav.push<bool>(fadeRoute<bool>(const PinScreen(mode: PinMode.verify, heading: 'Confirm with PIN')));
+    if (pinOk != true || !mounted) return;
+    try {
+      final r = await session.vault.restoreAll();
+      if (!mounted) return;
+      snack(
+        context,
+        r.failed == 0
+            ? 'Restored ${r.restored} to your gallery'
+            : 'Restored ${r.restored}. ${r.failed} couldn’t be restored and stay in the vault.',
+      );
+    } catch (e) {
+      if (mounted) snack(context, 'Restore failed: $e');
+    }
+  }
+
   Future<void> _clear() async {
     final nav = Navigator.of(context);
     final ok = await confirmDialog(
@@ -109,7 +141,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
+      body: Stack(
+        children: [
+          SafeArea(
         child: Column(
           children: [
             Padding(
@@ -141,6 +175,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onTap: _autoLock,
                   ),
                   const Divider(indent: 58),
+                  RowTile(
+                    icon: Icons.unarchive_outlined,
+                    title: 'Restore All to Gallery',
+                    subtitle: 'Move every photo and video back to your gallery',
+                    onTap: _restoreAll,
+                  ),
+                  const Divider(indent: 58),
                   RowTile(icon: Icons.delete_sweep_outlined, title: 'Clear Vault Data', onTap: _clear),
                   const Divider(indent: 58),
                   RowTile(icon: Icons.info_outline, title: 'About', onTap: _about),
@@ -149,6 +190,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
+      ),
+          const BusyOverlay(),
+        ],
       ),
     );
   }

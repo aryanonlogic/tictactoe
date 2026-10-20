@@ -37,8 +37,12 @@ void main() {
   String? index;
   String? saved;
   List<Object?> importResult = <Object?>[];
+  int restoreCalls = 0;
+  Set<String> restoreFail = <String>{};
 
   setUp(() {
+    restoreCalls = 0;
+    restoreFail = <String>{};
     index = null;
     saved = null;
     importResult = <Object?>[];
@@ -52,6 +56,15 @@ void main() {
           return true;
         case 'importUris':
           return importResult;
+        case 'restore':
+          {
+            restoreCalls++;
+            final items = (call.arguments as Map<Object?, Object?>)['items'] as List<Object?>;
+            return items
+                .map((m) => (m as Map<Object?, Object?>)['id'])
+                .where((id) => !restoreFail.contains(id))
+                .toList();
+          }
         default:
           return null;
       }
@@ -103,5 +116,36 @@ void main() {
     expect(v.byId('c' * 32)!.folder, kPicturesFolder);
     expect(v.byId('d' * 32)!.folder, kVideosFolder);
     expect(v.folderById(f.id), isNull);
+  });
+
+  test('restoreAll restores in batches of 8 and empties the vault', () async {
+    index = jsonEncode(<String, Object?>{
+      'v': 1,
+      'folders': <Object?>[],
+      'items': <Object?>[for (var i = 0; i < 20; i++) _item(String.fromCharCode(97 + i), video: i.isOdd)],
+    });
+    final v = VaultController();
+    await v.unlock();
+    final r = await v.restoreAll();
+    expect(r.restored, 20);
+    expect(r.failed, 0);
+    expect(restoreCalls, 3);
+    expect(v.items, isEmpty);
+  });
+
+  test('restoreAll keeps files that could not be restored', () async {
+    index = jsonEncode(<String, Object?>{
+      'v': 1,
+      'folders': <Object?>[],
+      'items': <Object?>[_item('a', video: false), _item('b', video: false), _item('c', video: true)],
+    });
+    restoreFail = <String>{'a' * 32};
+    final v = VaultController();
+    await v.unlock();
+    final r = await v.restoreAll();
+    expect(r.restored, 2);
+    expect(r.failed, 1);
+    expect(v.items.length, 1);
+    expect(v.items.first.id, 'a' * 32);
   });
 }

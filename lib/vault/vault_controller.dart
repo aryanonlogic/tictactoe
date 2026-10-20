@@ -265,6 +265,43 @@ class VaultController extends ChangeNotifier {
     });
   }
 
+  /// Restores every file to the gallery in batches of 8. Each batch is verified (hash) by the native side,
+  /// removed from the vault only if it verified, and the index is saved after every batch, so an interruption
+  /// never loses anything.
+  Future<({int restored, int failed})> restoreAll() {
+    return _withBusy('Restoring…', () async {
+      await _ensureLoaded();
+      final all = items.map((e) => e.id).toList();
+      var restored = 0;
+      var failed = 0;
+      const chunkSize = 8;
+      for (var i = 0; i < all.length; i += chunkSize) {
+        final end = i + chunkSize > all.length ? all.length : i + chunkSize;
+        final chunk = all.sublist(i, end);
+        busy = 'Restoring ${i + 1}–$end of ${all.length}…';
+        notifyListeners();
+        await _ensureLoaded();
+        final payload = <Map<String, String>>[];
+        for (final id in chunk) {
+          final it = byId(id);
+          if (it != null) payload.add({'id': it.id, 'name': it.name, 'mime': it.mime, 'hash': it.hash});
+        }
+        final ok = await Native.restore(payload);
+        await _ensureLoaded();
+        if (ok.isNotEmpty) {
+          final set = ok.toSet();
+          items.removeWhere((e) => set.contains(e.id));
+          await _save();
+          await Native.deleteBlobs(ok);
+        }
+        restored += ok.length;
+        failed += chunk.length - ok.length;
+      }
+      _scrubIfLocked();
+      return (restored: restored, failed: failed);
+    });
+  }
+
   Future<void> shareItems(List<String> ids) {
     return _withBusy('Preparing…', () async {
       final payload = <Map<String, String>>[];
