@@ -218,7 +218,6 @@ Future<FolderChoice?> pickFolder(BuildContext context) {
                 padding: EdgeInsets.fromLTRB(24, 0, 24, 8),
                 child: Text('Move to', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
               ),
-              _sheetRow2(ctx, Icons.photo_library_outlined, 'Library (no folder)', const FolderChoice(null)),
               for (final f in folders) _sheetRow2(ctx, Icons.folder_outlined, f.name, FolderChoice(f.id)),
               InkWell(
                 onTap: () async {

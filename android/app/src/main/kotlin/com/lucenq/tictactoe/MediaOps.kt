@@ -163,6 +163,7 @@ object MediaOps {
     /** Decrypts a vault photo, downsamples + applies EXIF rotation for on-screen display. */
     fun photoBytes(id: String, mime: String, maxSide: Int): ByteArray? {
         val f = VaultCrypto.blobFile(id)
+        if (mime == "image/gif") return VaultCrypto.openDecrypted(f).use { it.readBytes() }
         val bmp = decodeSampled({ VaultCrypto.openDecrypted(f) }, maxSide) ?: return null
         val o = ByteArrayOutputStream()
         val lossless = mime == "image/png" || mime == "image/webp" || mime == "image/gif"

@@ -27,7 +27,10 @@ class VideoViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
         val ctx = context!!
         val id = (args as Map<*, *>)["id"] as String
-        val exo = ExoPlayer.Builder(ctx).build()
+        val exo = ExoPlayer.Builder(ctx)
+            .setSeekBackIncrementMs(10_000)
+            .setSeekForwardIncrementMs(10_000)
+            .build()
         players.add(exo)
 
         val view = PlayerView(ctx)
@@ -35,6 +38,8 @@ class VideoViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
         view.useController = true
         view.setShowNextButton(false)
         view.setShowPreviousButton(false)
+        view.setShowRewindButton(true)
+        view.setShowFastForwardButton(true)
         view.controllerShowTimeoutMs = 2500
         view.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
         view.setBackgroundColor(Color.BLACK)

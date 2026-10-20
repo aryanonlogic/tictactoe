@@ -411,7 +411,13 @@ class FoldersView extends StatelessWidget {
       listenable: session.vault,
       builder: (context, _) {
         final folders = List<VaultFolder>.of(session.vault.folders)
-          ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+          ..sort((a, b) {
+            final ba = isBuiltinFolder(a.id);
+            final bb = isBuiltinFolder(b.id);
+            if (ba != bb) return ba ? -1 : 1;
+            if (ba) return a.id == kPicturesFolder ? -1 : 1;
+            return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+          });
         return Column(
           children: [
             Padding(
@@ -450,7 +456,7 @@ class FoldersView extends StatelessWidget {
                           leading: const Icon(Icons.folder_outlined, size: 26),
                           title: Text(f.name, style: const TextStyle(fontWeight: FontWeight.w500)),
                           subtitle: Text('$n ${n == 1 ? 'item' : 'items'}', style: const TextStyle(color: kSub)),
-                          trailing: PopupMenuButton<String>(
+                          trailing: isBuiltinFolder(f.id) ? null : PopupMenuButton<String>(
                             color: Colors.white,
                             surfaceTintColor: Colors.transparent,
                             icon: const Icon(Icons.more_horiz, color: kSub),

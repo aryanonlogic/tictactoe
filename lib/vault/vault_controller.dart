@@ -53,9 +53,25 @@ class VaultController extends ChangeNotifier {
           .map((e) => VaultItem.fromJson(e as Map<String, dynamic>))
           .toList();
     }
+    var changed = false;
+    if (!fs.any((f) => f.id == kPicturesFolder)) {
+      fs.add(VaultFolder(id: kPicturesFolder, name: 'Pictures', created: 0));
+      changed = true;
+    }
+    if (!fs.any((f) => f.id == kVideosFolder)) {
+      fs.add(VaultFolder(id: kVideosFolder, name: 'Videos', created: 0));
+      changed = true;
+    }
+    for (final it in its) {
+      if (it.folder == null || !fs.any((f) => f.id == it.folder)) {
+        it.folder = it.isVideo ? kVideosFolder : kPicturesFolder;
+        changed = true;
+      }
+    }
     folders = fs;
     items = its;
     _loaded = true;
+    if (changed) await _save();
     // Only ever clean up after an index was read successfully, so a read error can never wipe files.
     if (raw != null) await Native.cleanupOrphans(items.map((e) => e.id).toList());
   }
@@ -129,7 +145,7 @@ class VaultController extends ChangeNotifier {
             size: (m['size'] as num).toInt(),
             hash: m['hash'] as String,
             added: now + n++,
-            folder: folderId,
+            folder: folderId ?? (m['type'] == 'video' ? kVideosFolder : kPicturesFolder),
             durMs: (m['dur'] as num?)?.toInt() ?? 0,
           ));
           report.imported++;
@@ -170,7 +186,7 @@ class VaultController extends ChangeNotifier {
   Future<void> renameFolder(String id, String name) async {
     await _ensureLoaded();
     final f = folderById(id);
-    if (f == null) return;
+    if (f == null || isBuiltinFolder(id)) return;
     f.name = name.trim();
     await _save();
     notifyListeners();
@@ -179,13 +195,14 @@ class VaultController extends ChangeNotifier {
   /// Removes the folder. With [deleteFiles] its files are deleted too, otherwise they move back to the library.
   Future<void> deleteFolder(String id, {required bool deleteFiles}) {
     return _withBusy('Deleting folder…', () async {
+      if (isBuiltinFolder(id)) return;
       await _ensureLoaded();
       final inside = items.where((e) => e.folder == id).toList();
       if (deleteFiles) {
         items.removeWhere((e) => e.folder == id);
       } else {
         for (final e in inside) {
-          e.folder = null;
+          e.folder = e.isVideo ? kVideosFolder : kPicturesFolder;
         }
       }
       folders.removeWhere((f) => f.id == id);

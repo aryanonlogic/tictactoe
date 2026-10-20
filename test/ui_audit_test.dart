@@ -52,10 +52,12 @@ void _seed() {
         size: 1000 + i,
         hash: 'hash$i',
         added: i,
-        folder: i == 0 ? 'f1' : null,
+        folder: i == 0 ? 'f1' : 'pictures',
       ),
   ];
   session.vault.folders = <VaultFolder>[
+    VaultFolder(id: 'pictures', name: 'Pictures', created: 0),
+    VaultFolder(id: 'videos', name: 'Videos', created: 0),
     VaultFolder(id: 'f1', name: 'A very long folder name that must be ellipsized properly on narrow phones', created: 0),
   ];
 }

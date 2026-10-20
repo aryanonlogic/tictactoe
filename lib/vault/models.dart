@@ -78,3 +78,9 @@ class ImportReport {
     return parts.isEmpty ? 'Nothing imported' : parts.join(' · ');
   }
 }
+
+/// Built-in folders. Imports are filed here automatically (photos/GIFs -> Pictures, videos -> Videos).
+const String kPicturesFolder = 'pictures';
+const String kVideosFolder = 'videos';
+
+bool isBuiltinFolder(String id) => id == kPicturesFolder || id == kVideosFolder;
