@@ -272,6 +272,17 @@ void main() {
       await tester.pump(const Duration(milliseconds: 600));
     });
 
+    testWidgets('splash plays for about 2 seconds, then hands over to the game', (tester) async {
+      _size(tester, const Size(360, 740));
+      await tester.pumpWidget(_app(const SplashScreen(), 1));
+      await tester.pump(const Duration(milliseconds: 1500));
+      expect(find.byType(GameScreen), findsNothing);
+      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(GameScreen), findsOneWidget);
+    });
+
     testWidgets('PIN setup rejects an obvious PIN', (tester) async {
       _size(tester, const Size(360, 740));
       await tester.pumpWidget(_app(const PinScreen(mode: PinMode.setup), 1));
