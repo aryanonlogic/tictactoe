@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -321,7 +322,15 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                       child: LayoutBuilder(
                         builder: (context, c) {
                           final size = min(c.maxWidth, c.maxHeight);
-                          return SizedBox(width: size, height: size, child: _buildBoard(size));
+                          return SizedBox(
+                            width: size,
+                            height: size,
+                            child: GlassPanel(
+                              radius: 32,
+                              padding: const EdgeInsets.all(14),
+                              child: _buildBoard(size - 28),
+                            ),
+                          );
                         },
                       ),
                     ),
@@ -335,18 +344,29 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           ),
           if (_over)
             Positioned.fill(
-              child: ResultOverlay(
+              child: ClipRect(
+                child: AnimatedBuilder(
+                animation: _resultC,
+                builder: (context, child) => BackdropFilter(
+                  filter: ui.ImageFilter.blur(sigmaX: _frostSigma(), sigmaY: _frostSigma()),
+                  child: child,
+                ),
+                child: ResultOverlay(
                 animation: _resultC,
                 text: _resultText(),
                 subtitle: _resultSub(),
                 win: _winner == null ? null : (!_vsAi || _winner == Mark.x),
                 onRestart: _newGame,
               ),
+              ),
+              ),
             ),
         ],
       ),
     );
   }
+
+  double _frostSigma() => 0.01 + 16 * Curves.easeOut.transform((_resultC.value / 0.3).clamp(0.0, 1.0).toDouble());
 
   String _resultText() {
     if (_winner == null) return 'DRAW';
@@ -374,7 +394,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             ],
           ),
         ),
-        IconButton(onPressed: _showStats, icon: const Icon(Icons.bar_chart_rounded), tooltip: 'Stats'),
+        GlassIconButton(onPressed: _showStats, icon: Icons.bar_chart_rounded, tooltip: 'Stats'),
       ],
     );
   }
@@ -398,9 +418,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(onPressed: _undo, icon: const Icon(Icons.history), tooltip: 'Undo'),
+        GlassIconButton(onPressed: _undo, icon: Icons.history, tooltip: 'Undo'),
         PillButton(label: 'New Game', onPressed: _newGame),
-        IconButton(onPressed: _showSettings, icon: const Icon(Icons.settings_outlined), tooltip: 'Game settings'),
+        GlassIconButton(onPressed: _showSettings, icon: Icons.settings_outlined, tooltip: 'Game settings'),
       ],
     );
   }
@@ -474,7 +494,7 @@ class ResultOverlay extends StatelessWidget {
         return IgnorePointer(
           ignoring: v < 0.7,
           child: ColoredBox(
-            color: Colors.white.withAlpha((scrim * 236).round()),
+            color: Colors.white.withAlpha((scrim * 120).round()),
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

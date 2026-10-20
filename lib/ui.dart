@@ -60,7 +60,11 @@ class Segmented<T> extends StatelessWidget {
     return Container(
       height: 44,
       padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(color: kMist, borderRadius: BorderRadius.circular(22)),
+      decoration: BoxDecoration(
+        color: const Color(0x8CFFFFFF),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xCCFFFFFF)),
+      ),
       child: Row(
         children: [
           for (final e in options.entries)

@@ -162,7 +162,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Expanded(
               child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                 children: [
+                  GlassPanel(
+                    radius: 26,
+                    child: Column(
+                      children: [
                   RowTile(icon: Icons.lock_outline, title: 'Change PIN', onTap: _changePin),
                   const Divider(indent: 58),
                   RowTile(
@@ -182,6 +187,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   RowTile(icon: Icons.delete_sweep_outlined, title: 'Clear Vault Data', onTap: _clear),
                   const Divider(indent: 58),
                   RowTile(icon: Icons.info_outline, title: 'About', onTap: _about),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

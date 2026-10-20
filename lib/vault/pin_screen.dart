@@ -238,8 +238,11 @@ class _PinScreenState extends State<PinScreen> with SingleTickerProviderStateMix
                     ),
             ),
             const Spacer(),
-            _keypad(),
-            const SizedBox(height: 28),
+            SizedBox(
+              width: 292,
+              child: GlassPanel(radius: 32, blur: 18, padding: const EdgeInsets.symmetric(vertical: 4), child: _keypad()),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -262,10 +265,10 @@ class _PinScreenState extends State<PinScreen> with SingleTickerProviderStateMix
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(width: 100),
+              const SizedBox(width: 88),
               key('0'),
               SizedBox(
-                width: 100,
+                width: 88,
                 child: IconButton(onPressed: _back, icon: const Icon(Icons.backspace_outlined, size: 22)),
               ),
             ],
@@ -285,11 +288,11 @@ class _Key extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 100,
+      width: 88,
       child: Center(
         child: Material(
-          color: kMist,
-          shape: const CircleBorder(),
+          color: const Color(0x99FFFFFF),
+          shape: const CircleBorder(side: BorderSide(color: Color(0xCCFFFFFF))),
           child: InkWell(
             customBorder: const CircleBorder(),
             onTap: onTap,

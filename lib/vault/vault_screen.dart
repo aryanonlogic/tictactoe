@@ -75,10 +75,9 @@ class _VaultScreenState extends State<VaultScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
+      bottomNavigationBar: GlassBar(
+        child: SizedBox(
           height: 60,
-          decoration: const BoxDecoration(border: Border(top: BorderSide(color: kLine))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -218,8 +217,8 @@ class _LibraryViewState extends State<LibraryView> {
             ),
           ),
           Material(
-            color: kMist,
-            shape: const CircleBorder(),
+            color: const Color(0x99FFFFFF),
+            shape: const CircleBorder(side: BorderSide(color: Color(0xCCFFFFFF))),
             child: IconButton(
               onPressed: () => addFlow(context, folderId: widget.folder?.id),
               icon: const Icon(Icons.add),
@@ -425,8 +424,8 @@ class FoldersView extends StatelessWidget {
                     child: Text('Folders', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600, letterSpacing: -0.5)),
                   ),
                   Material(
-                    color: kMist,
-                    shape: const CircleBorder(),
+                    color: const Color(0x99FFFFFF),
+                    shape: const CircleBorder(side: BorderSide(color: Color(0xCCFFFFFF))),
                     child: IconButton(
                       onPressed: () => _create(context),
                       icon: const Icon(Icons.create_new_folder_outlined),
@@ -443,12 +442,16 @@ class FoldersView extends StatelessWidget {
                           textAlign: TextAlign.center, style: TextStyle(color: kSub, height: 1.4)),
                     )
                   : ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                       itemCount: folders.length,
-                      separatorBuilder: (context, i) => const Divider(indent: 64),
+                      separatorBuilder: (context, i) => const SizedBox(height: 10),
                       itemBuilder: (context, i) {
                         final f = folders[i];
                         final n = session.vault.countIn(f.id);
-                        return ListTile(
+                        return GlassPanel(
+                          radius: 20,
+                          blur: 16,
+                          child: ListTile(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                           leading: const Icon(Icons.folder_outlined, size: 26),
                           title: Text(f.name, style: const TextStyle(fontWeight: FontWeight.w500)),
@@ -469,6 +472,7 @@ class FoldersView extends StatelessWidget {
                           onTap: () => Navigator.of(context).push<void>(
                             MaterialPageRoute<void>(builder: (_) => FolderPage(folder: f)),
                           ),
+                        ),
                         );
                       },
                     ),

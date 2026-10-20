@@ -61,10 +61,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   offset: Offset(0, lift),
                   child: Transform.scale(
                     scale: push,
-                    child: SizedBox(
-                      width: board,
-                      height: board,
-                      child: CustomPaint(painter: _SplashBoardPainter(t)),
+                    child: GlassPanel(
+                      radius: 36,
+                      padding: const EdgeInsets.all(18),
+                      child: SizedBox(
+                        width: board,
+                        height: board,
+                        child: CustomPaint(painter: _SplashBoardPainter(t)),
+                      ),
                     ),
                   ),
                 ),

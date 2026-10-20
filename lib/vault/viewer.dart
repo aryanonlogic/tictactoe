@@ -209,8 +209,13 @@ class _ViewerScreenState extends State<ViewerScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(8, 6, 8, 10),
-                child: Row(
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 12),
+                child: GlassPanel(
+                  radius: 28,
+                  blur: 18,
+                  dark: dark,
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _bar(Icons.delete_outline, 'Delete', fg, _delete),
@@ -218,6 +223,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
                     _bar(Icons.ios_share, 'Share', fg, () => shareItemsFlow(context, <String>[_items[_i].id])),
                     _bar(Icons.more_horiz, 'More', fg, _more),
                   ],
+                ),
                 ),
               ),
             ],
