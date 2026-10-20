@@ -1,0 +1,4 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Debug only: lets `flutter run` talk to the VM. The release build has NO internet permission. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+</manifest>
